@@ -4,6 +4,8 @@ export interface TimelineItemProps {
   title: string
   content: string
   date: string
+  className?: string; // Opsiyonel className özelliği eklendi
+
 }
 
 export const TimelineItem: React.FC<TimelineItemProps> = ({ title, content, date }) => (
@@ -18,7 +20,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({ title, content, date
       <p className="mt-2 text-xs text-gray-400">{date}</p>
     </div>
   </div>
-)
+);
 
 export const Timeline: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="container mx-auto w-full h-full">
@@ -27,5 +29,5 @@ export const Timeline: React.FC<{ children: React.ReactNode }> = ({ children }) 
       {children}
     </div>
   </div>
-)
+);
 

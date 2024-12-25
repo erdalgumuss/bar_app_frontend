@@ -1,4 +1,4 @@
-import apiClient from './apiClient'; // API istemcinizi kullanın
+import apiClient from '../utils/apiClient'; // API istemcinizi kullanın
 
 export const getLawyers = async () => {
   try {

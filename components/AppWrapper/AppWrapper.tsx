@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/store/useAuthStore'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const { role, isAuthenticated, isActive, setAuth } = useAuthStore((state) => state)

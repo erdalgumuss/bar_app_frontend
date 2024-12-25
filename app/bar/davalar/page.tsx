@@ -1,88 +1,86 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import BaroDashboard from '@/components/pages/bar/BaroDashboard'
-import DavaAramaFiltre from '@/components/pages/bar/case/caseSearchFilter'
-import DavaListesi from '@/components/pages/bar/case/DavaListesi'
-import DavaEkleForm from '@/components/pages/bar/case/DavaEkleForm'
-import { Button } from '@/components/ui/button'
-import { mockDavalar } from '@/utils/mockData'
+import { useState, useEffect } from 'react';
+import BaroDashboard from '@/components/pages/bar/BaroDashboard';
+import CaseSearchFilter from '@/components/pages/bar/case/CaseSearchFilter';
+import CaseList from '@/components/pages/bar/case/CaseList';
+import AddCaseForm from '@/components/pages/bar/case/AddCaseForm';
+import CaseDetails from '@/components/pages/bar/case/CaseDetails';
+import { Button } from '@/components/ui/button';
+import useCaseStore from '@/stores/useCaseStore'; // Zustand Store kullanımı
+import { Case } from '@/types/case';
 
-export default function DavaYonetimiPage() {
-  const [davalar, setDavalar] = useState(mockDavalar || [])
-  const [filteredDavalar, setFilteredDavalar] = useState(mockDavalar || [])
-  const [selectedDava, setSelectedDava] = useState(null)
-  const [showDavaEkleForm, setShowDavaEkleForm] = useState(false)
+export default function CaseManagementPage() {
+  const {
+    cases,
+    fetchCases,
+    addCase,
+    updateCase,
+  } = useCaseStore(); // Store'dan veri ve işlevler
+
+  const [filteredCases, setFilteredCases] = useState<Case[]>([]);
+  const [selectedCase, setSelectedCase] = useState<Case | null>(null);
+  const [showAddCaseForm, setShowAddCaseForm] = useState(false);
 
   useEffect(() => {
-    const fetchDavalar = async () => {
-      setDavalar(mockDavalar || [])
-      setFilteredDavalar(mockDavalar || [])
-    }
+    const loadCases = async () => {
+      await fetchCases(false); // Baro görevlisi davalarını getir
+      setFilteredCases(cases);
+    };
 
-    fetchDavalar()
-  }, [])
+    loadCases();
+  }, [cases, fetchCases]);
 
-  const handleFilter = (filteredDavalar) => {
-    setFilteredDavalar(filteredDavalar)
-  }
+  const handleFilter = (filtered: Case[]) => {
+    setFilteredCases(filtered);
+  };
 
-  const handleDavaSelect = (dava) => {
-    setSelectedDava(dava)
-  }
+  const handleCaseSelect = (selected: Case) => {
+    setSelectedCase(selected);
+  };
 
-  const handleDavaUpdate = (updatedDava) => {
-    const updatedDavalar = davalar.map(dava => 
-      dava.id === updatedDava.id ? updatedDava : dava
-    )
-    setDavalar(updatedDavalar)
-    setFilteredDavalar(updatedDavalar)
-    setSelectedDava(null)
-  }
+  const handleCaseUpdate = async (updatedCase: Case) => {
+    await updateCase(updatedCase.id, updatedCase);
+    setSelectedCase(null);
+  };
 
-  const handleDavaEkle = (yeniDava) => {
-    const yeniDavalar = [...davalar, { ...yeniDava, id: Date.now() }]
-    setDavalar(yeniDavalar)
-    setFilteredDavalar(yeniDavalar)
-    setShowDavaEkleForm(false)
-  }
+  const handleAddCase = async (newCase: Partial<Case>) => {
+    await addCase(newCase);
+    setShowAddCaseForm(false);
+  };
 
   return (
     <BaroDashboard>
       <div className="space-y-6 bg-gray-900 text-gray-100 p-6 rounded-lg">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Dava Yönetimi</h1>
-          <Button 
+          <Button
             className="bg-green-600 hover:bg-green-700 text-white"
-            onClick={() => setShowDavaEkleForm(true)}
+            onClick={() => setShowAddCaseForm(true)}
           >
             Yeni Dava Ekle
           </Button>
         </div>
 
-        <DavaAramaFiltre davalar={davalar} onFilter={handleFilter} />
+        <CaseSearchFilter cases={cases} onFilter={handleFilter} />
 
-        <DavaListesi 
-          davalar={filteredDavalar} 
-          onDavaSelect={handleDavaSelect}
-        />
+        <CaseList cases={filteredCases} onCaseSelect={handleCaseSelect} />
 
-        {selectedDava && (
-          <caseDetails
-            dava={selectedDava}
-            onClose={() => setSelectedDava(null)}
-            onUpdate={handleDavaUpdate}
+        {selectedCase && (
+      <CaseDetails
+            caseData={selectedCase} // 'case' yerine 'caseData' kullanıldı
+            onClose={() => setSelectedCase(null)}
+            onUpdate={handleCaseUpdate}
           />
         )}
 
-        {showDavaEkleForm && (
-          <DavaEkleForm
-            onClose={() => setShowDavaEkleForm(false)}
-            onSubmit={handleDavaEkle}
+        {showAddCaseForm && (
+          <AddCaseForm
+            onClose={() => setShowAddCaseForm(false)}
+            onSubmit={handleAddCase}
           />
         )}
       </div>
     </BaroDashboard>
-  )
+  );
 }
-

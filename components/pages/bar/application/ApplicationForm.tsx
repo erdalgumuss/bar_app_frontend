@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -6,9 +7,16 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { IApplication } from '@/types/application'; // Tipleri import ettik
 
-export default function BaroApplicationForm({ application, onClose, onSubmit }) {
-  const [formData, setFormData] = useState({
+interface ApplicationFormProps {
+  application?: IApplication | null; // Mevcut başvuru nesnesi (opsiyonel)
+  onClose: () => void; // Form kapatma işlevi
+  onSubmit: (data: IApplication) => void; // Form gönderme işlevi
+}
+
+export default function ApplicationForm({ application, onClose, onSubmit }: ApplicationFormProps) {
+  const [formData, setFormData] = useState<IApplication>({
     applicantName: '',
     contactDetails: {
       email: '',
@@ -16,32 +24,25 @@ export default function BaroApplicationForm({ application, onClose, onSubmit }) 
       address: '',
     },
     eventTitle: '',
-    eventCategory: '',
+    eventCategory: 'isHukuku',
     status: 'beklemede',
     date: new Date().toISOString().split('T')[0],
     description: '',
+    documents: [],
+    messages: [],
+    history: [],
+    priority: 'orta',
   });
 
   useEffect(() => {
     if (application) {
-      setFormData({
-        applicantName: application.applicantName || '',
-        contactDetails: {
-          email: application.contactDetails?.email || '',
-          phone: application.contactDetails?.phone || '',
-          address: application.contactDetails?.address || '',
-        },
-        eventTitle: application.eventTitle || '',
-        eventCategory: application.eventCategory || '',
-        status: application.status || 'beklemede',
-        date: application.date || new Date().toISOString().split('T')[0],
-        description: application.description || '',
-      });
+      setFormData({ ...application });
     }
   }, [application]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+  
     if (['email', 'phone', 'address'].includes(name)) {
       setFormData((prevState) => ({
         ...prevState,
@@ -50,12 +51,18 @@ export default function BaroApplicationForm({ application, onClose, onSubmit }) 
           [name]: value,
         },
       }));
+    } else if (name === 'eventCategory') {
+      setFormData((prevState) => ({
+        ...prevState,
+        eventCategory: value as IApplication['eventCategory'], // Türü açıkça belirttik
+      }));
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
   };
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
   };
@@ -65,9 +72,7 @@ export default function BaroApplicationForm({ application, onClose, onSubmit }) 
       <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
         <DialogHeader>
           <DialogTitle>{application ? 'Başvuru Düzenle' : 'Yeni Başvuru Ekle'}</DialogTitle>
-          <DialogDescription>
-            Lütfen başvuru bilgilerini eksiksiz doldurunuz.
-          </DialogDescription>
+          <DialogDescription>Lütfen başvuru bilgilerini eksiksiz doldurunuz.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -128,29 +133,26 @@ export default function BaroApplicationForm({ application, onClose, onSubmit }) 
           <div className="space-y-2">
             <Label htmlFor="eventCategory">Başvuru Kategorisi</Label>
             <Select
-  name="eventCategory"
-  onValueChange={(value) =>
-    setFormData((prevState) => ({ ...prevState, eventCategory: value }))
-  }
->
-  <SelectTrigger>
-    <SelectValue placeholder="Kategori seçin" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="isHukuku">İş Hukuku</SelectItem>
-    <SelectItem value="egitimHakki">Eğitim Hakkı</SelectItem>
-    <SelectItem value="ifadeOzgurlugu">İfade Özgürlüğü</SelectItem>
-    <SelectItem value="kadinaKarsiSiddet">Kadına Karşı Şiddet</SelectItem>
-    <SelectItem value="cocukHaklari">Çocuk Hakları</SelectItem>
-    <SelectItem value="tuketiciHaklari">Tüketici Hakları</SelectItem>
-    <SelectItem value="mirasHukuku">Miras Hukuku</SelectItem>
-    <SelectItem value="bosanmaDavasi">Boşanma Davası</SelectItem>
-    <SelectItem value="trafikKazasi">Trafik Kazası</SelectItem>
-    <SelectItem value="sosyalGuvenlik">Sosyal Güvenlik</SelectItem>
-    <SelectItem value="cezaHukuku">Ceza Hukuku</SelectItem>
-    <SelectItem value="insanHaklari">İnsan Hakları</SelectItem>
-  </SelectContent>
-</Select>
+              name="eventCategory"
+              value={formData.eventCategory}
+              onValueChange={(value) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  eventCategory: value as IApplication['eventCategory'], // Türü açıkça belirttik
+                }))
+              }
+            >
+              <SelectTrigger className="bg-gray-700 text-gray-100">
+                <SelectValue placeholder="Kategori seçin" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 text-gray-100">
+                <SelectItem value="isHukuku">İş Hukuku</SelectItem>
+                <SelectItem value="egitimHakki">Eğitim Hakkı</SelectItem>
+                <SelectItem value="ifadeOzgurlugu">İfade Özgürlüğü</SelectItem>
+                <SelectItem value="kadinaKarsiSiddet">Kadına Karşı Şiddet</SelectItem>
+                <SelectItem value="cocukHaklari">Çocuk Hakları</SelectItem>
+              </SelectContent>
+            </Select>
 
           </div>
           <div className="space-y-2">

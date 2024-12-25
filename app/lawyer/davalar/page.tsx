@@ -1,72 +1,79 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import AvukatDashboard from '@/components/pages/lawyer/AvukatDashboard'
-import { DavaAramaFiltre } from '@/components/pages/lawyer/case/DavaAramaFiltre'
-import { DavaListesi } from '@/components/pages/lawyer/case/DavaListesi'
+import { useCallback, useEffect, useState } from 'react';
+import LawyerDashboard from '@/components/pages/lawyer/LawyerDashboard';
+import { CaseSearchFilter } from '@/components/pages/lawyer/case/CaseSearchFilter';
+import { CaseList } from '@/components/pages/lawyer/case/CaseList';
+import { CaseDetails } from '@/components/pages/lawyer/case/CaseDetails';
+import useCaseStore from '@/stores/useCaseStore';
+import { Case } from '@/types';
 
+export default function CasesPage() {
+  const {
+    cases,
+    fetchCases,
+    selectedCase,
+    fetchCaseById,
+    loading,
+    error,
+  } = useCaseStore();
 
-// Mock data
-const mockDavalar = [
-  {
-    id: '1',
-    ad: 'Yılmaz vs. ABC Şirketi',
-    numara: 'DVA2023001',
-    durum: 'aktif',
-    basvuran: 'Ahmet Yılmaz',
-    avukat: 'Av. Mehmet Öz',
-    konu: 'İş Hukuku - Haksız Fesih',
-    basariOrani: 75,
-    kategori: 'is',
-    basvuranIletisim: 'ahmet@email.com | 0555-123-4567',
-    ozet: 'ABC Şirketi tarafından haksız yere işten çıkarılan Ahmet Yılmaz\'ın açtığı dava.',
-    dosyalar: ['İş Sözleşmesi.pdf', 'Fesih Bildirimi.pdf', 'Tanık İfadeleri.docx']
-  },
-  {
-    id: '2',
-    ad: 'Kaya Ailesi Veraset Davası',
-    numara: 'DVA2023002',
-    durum: 'beklemede',
-    basvuran: 'Ayşe Kaya',
-    avukat: 'Av. Mehmet Öz',
-    konu: 'Miras Hukuku - Veraset İlamı',
-    basariOrani: 60,
-    kategori: 'aile',
-    basvuranIletisim: 'ayse@email.com | 0555-987-6543',
-    ozet: 'Kaya ailesinin miras paylaşımı konusundaki anlaşmazlığı üzerine açılan dava.',
-    dosyalar: ['Veraset İlamı.pdf', 'Tapu Kayıtları.pdf', 'Aile Nüfus Kayıt Örneği.pdf']
-  },
-  // Daha fazla mock dava eklenebilir
-]
+  const [filteredCases, setFilteredCases] = useState<Case[]>(cases);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
-export default function DavalarPage() {
-  const [davalar, setDavalar] = useState(mockDavalar)
-  const [selectedDava, setSelectedDava] = useState(null)
-  const [isDetailOpen, setIsDetailOpen] = useState(false)
+  // Fetch all assigned cases (for lawyer)
+  useEffect(() => {
+    fetchCases(true); // Fetch cases when component mounts
+  }, [fetchCases]);
 
-  const handleFilter = (filteredDavalar) => {
-    setDavalar(filteredDavalar)
+  // Sync filteredCases with cases whenever cases updates
+  useEffect(() => {
+    setFilteredCases(cases);
+  }, [cases]);
+
+  // Handle filtering
+  const handleFilter = useCallback((filteredCases: Case[]) => {
+    setFilteredCases(filteredCases);
+  }, []);
+
+  // Fetch and show details for a selected case
+  const handleViewDetails = useCallback(
+    async (id: string) => {
+      await fetchCaseById(id);
+      setIsDetailOpen(true);
+    },
+    [fetchCaseById]
+  );
+
+  if (loading) {
+    return <p>Yükleniyor...</p>;
   }
 
-  const handleDetayGor = (id) => {
-    const dava = davalar.find(d => d.id === id)
-    setSelectedDava(dava)
-    setIsDetailOpen(true)
+  if (error) {
+    return <p className="text-red-500">Hata: {error}</p>;
   }
+
 
   return (
-    <AvukatDashboard>
+    <LawyerDashboard>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold">Atanmış Davalar</h1>
-        <DavaAramaFiltre onFilter={handleFilter} davalar={mockDavalar} />
-        <DavaListesi davalar={davalar} onDetayGor={handleDetayGor} />
-        <caseDetails 
-          dava={selectedDava} 
-          isOpen={isDetailOpen} 
-          onClose={() => setIsDetailOpen(false)} 
-        />
-      </div>
-    </AvukatDashboard>
-  )
-}
+        <h1 className="text-3xl font-bold">Assigned Cases</h1>
 
+        {/* Search and Filter */}
+        <CaseSearchFilter onFilter={handleFilter} cases={cases} />
+
+        {/* Case List */}
+        <CaseList cases={filteredCases} onViewDetails={handleViewDetails} />
+
+        {/* Case Details */}
+        {selectedCase && (
+          <CaseDetails
+            caseData={selectedCase}
+            isOpen={isDetailOpen}
+            onClose={() => setIsDetailOpen(false)}
+          />
+        )}
+      </div>
+    </LawyerDashboard>
+  );
+}

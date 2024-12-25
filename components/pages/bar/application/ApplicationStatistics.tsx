@@ -1,13 +1,30 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
+import { IApplication } from '@/types/application';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
-export default function ApplicationStatistics({ applications }) {
+interface ApplicationStatisticsProps {
+  applications: IApplication[];
+}
+
+export default function ApplicationStatistics({ applications }: ApplicationStatisticsProps) {
   // Başvuru kategorilerine göre dağılım
-  const applicationCategories = applications.reduce((acc, app) => {
+  const applicationCategories = applications.reduce<Record<string, number>>((acc, app) => {
     acc[app.eventCategory] = (acc[app.eventCategory] || 0) + 1;
     return acc;
   }, {});
@@ -18,19 +35,20 @@ export default function ApplicationStatistics({ applications }) {
   }));
 
   // Aylık başvuru sayıları
-  const monthlyCounts = applications.reduce((acc, app) => {
+  const monthlyCounts = applications.reduce<Record<number, number>>((acc, app) => {
     const month = new Date(app.date).getMonth();
     acc[month] = (acc[month] || 0) + 1;
     return acc;
   }, {});
 
   const monthlyData = Object.entries(monthlyCounts).map(([month, count]) => ({
-    month: new Date(2023, month).toLocaleString('default', { month: 'long' }),
+    month: new Date(2023, Number(month)).toLocaleString('default', { month: 'long' }),
     count,
   }));
 
   return (
     <div className="space-y-6">
+      {/* Başvuru Kategorilerine Göre Dağılım */}
       <Card className="bg-gray-800 text-gray-100">
         <CardHeader>
           <CardTitle>Başvuru Kategorilerine Göre Dağılım</CardTitle>
@@ -61,6 +79,7 @@ export default function ApplicationStatistics({ applications }) {
         </CardContent>
       </Card>
 
+      {/* Aylık Başvuru Sayıları */}
       <Card className="bg-gray-800 text-gray-100">
         <CardHeader>
           <CardTitle>Aylık Başvuru Sayıları</CardTitle>

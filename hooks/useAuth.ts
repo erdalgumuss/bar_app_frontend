@@ -1,7 +1,7 @@
 import { useState } from "react";
 import jwt_decode from "jwt-decode";
 import { login } from "@/services/authService";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation";
 
 interface DecodedToken {

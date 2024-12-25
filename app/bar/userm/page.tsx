@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AddMemberModal from '@/components/pages/bar/admin/AddMemberModal'
 import ChangeMemberRoleModal from '@/components/pages/bar/admin/ChangeMemberRoleModal'
 import DeleteMemberModal from '@/components/pages/bar/admin/DeleteMemberModal'
-import { useAuthStore } from '@/store/useAuthStore' // Rol kontrolü için useAuthStore kullanıyoruz
+import { useAuthStore } from '@/stores/useAuthStore' // Rol kontrolü için useAuthStore kullanıyoruz
 
 interface Member {
   id: number

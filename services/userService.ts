@@ -1,5 +1,5 @@
-import apiClient from '@/services/apiClient'
-import { Member } from '@/store/useMemberStore'
+import apiClient from '@/utils/apiClient'
+import { Member } from '@/stores/useMemberStore'
 
 export const getMembers = async (): Promise<Member[]> => {
   const response = await apiClient.get('/members')

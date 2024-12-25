@@ -1,86 +1,97 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
-import BasvuruListesi from '@/components/pages/lawyer/application/applicationList';
-import DavaEkleForm from '@/components/pages/bar/case/DavaEkleForm';
-import AvukatDashboard from '@/components/pages/lawyer/AvukatDashboard';
+import ApplicationList from '@/components/pages/lawyer/application/ApplicationList';
+import AddCaseForm from '@/components/pages/bar/case/AddCaseForm';
+import LawyerDashboard from '@/components/pages/lawyer/LawyerDashboard';
 import { useRouter } from 'next/navigation';
+import useApplicationStore from '@/stores/useApplicationStore';
+import { IApplication } from '@/types/application';
+import { Case } from '@/types/case';
 
-// Mock data for demonstration purposes
-const mockBasvurular = [
-  { id: 1, basvuruNo: 'BSV001', basvuranAd: 'Ahmet Yılmaz', konu: 'İş Davası', tarih: '2023-06-01', durum: 'Yeni' },
-  { id: 2, basvuruNo: 'BSV002', basvuranAd: 'Ayşe Kaya', konu: 'Boşanma Davası', tarih: '2023-06-02', durum: 'Onaylandı' },
-  { id: 3, basvuruNo: 'BSV003', basvuranAd: 'Mehmet Demir', konu: 'Tazminat Davası', tarih: '2023-06-03', durum: 'Yeni' },
-];
-
-export default function BasvuruYonetimSayfasi() {
-  const [basvurular, setBasvurular] = useState([]);
-  const [selectedBasvuru, setSelectedBasvuru] = useState(null);
-  const [showDavaEkleForm, setShowDavaEkleForm] = useState(false);
+export default function ApplicationManagementPage() {
+  const [selectedApplication, setSelectedApplication] = useState<IApplication | null>(null);
+  const [showAddCaseForm, setShowAddCaseForm] = useState(false);
   const router = useRouter();
 
+  const { applications, fetchApplications, updateApplication } = useApplicationStore();
+
   useEffect(() => {
-    // Simulating API call to fetch basvurular
-    setBasvurular(mockBasvurular);
-  }, []);
+    fetchApplications();
+  }, [fetchApplications]);
 
-  const handleBasvuruOnayla = (basvuruId) => {
-    setBasvurular(
-      basvurular.map((basvuru) =>
-        basvuru.id === basvuruId ? { ...basvuru, durum: 'Onaylandı' } : basvuru
-      )
-    );
-    toast({
-      title: 'Başvuru Onaylandı',
-      description: "Başvuru durumu 'Onaylandı' olarak güncellendi.",
-    });
+  const handleApproveApplication = async (applicationId: string) => {
+    try {
+      await updateApplication(applicationId, { status: 'işlemde' });
+      toast({
+        title: 'Başvuru Onaylandı',
+        description: 'Başvuru durumu başarıyla güncellendi.',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Hata',
+        description: 'Başvuru onaylanırken bir hata oluştu.',
+      });
+    }
   };
 
-  const handleDavaAc = (basvuruId) => {
-    setSelectedBasvuru(basvurular.find((b) => b.id === basvuruId));
-    setShowDavaEkleForm(true);
+  const handleOpenCase = (applicationId: string) => {
+    const application = applications.find((app) => app.id === applicationId);
+    if (application) {
+      setSelectedApplication(application);
+      setShowAddCaseForm(true);
+    }
   };
 
-  const handleDavaSelect = (application) => {
-    router.push(`/lawyer/basvurular/${application.id}`);
+  const handleSelectApplication = (application: IApplication) => {
+    router.push(`/lawyer/applications/${application.id}`);
   };
 
-  const handleDavaCreated = (yeniDava) => {
-    setBasvurular(
-      basvurular.map((basvuru) =>
-        basvuru.id === selectedBasvuru.id
-          ? { ...basvuru, durum: 'Dava Açıldı', davaDetay: yeniDava }
-          : basvuru
-      )
-    );
-    setSelectedBasvuru(null);
-    setShowDavaEkleForm(false);
-    toast({
-      title: 'Dava Oluşturuldu',
-      description: `Başvuru durumu 'Dava Açıldı' olarak güncellendi. (${yeniDava.caseNumber})`,
-    });
+  const handleCaseCreated = (newCase: Case) => {
+    if (selectedApplication) {
+      const updatedApplication: IApplication = {
+        ...selectedApplication,
+        status: 'beklemede',
+        history: [
+          ...selectedApplication.history,
+          {
+            date: new Date().toISOString(),
+            action: 'Case Opened',
+            description: `Case Number: ${newCase.caseNumber}`,
+          },
+        ],
+      };
+      updateApplication(selectedApplication.id, updatedApplication);
+      setSelectedApplication(null);
+      setShowAddCaseForm(false);
+      toast({
+        title: 'Dava Oluşturuldu',
+        description: `Başvuru durumu güncellendi. (${newCase.caseNumber})`,
+      });
+    }
   };
 
   return (
-    <AvukatDashboard>
+    <LawyerDashboard>
       <div className="space-y-6">
         <h1 className="text-3xl font-bold">Başvuru Yönetimi</h1>
-        <BasvuruListesi
-          basvurular={basvurular}
-          onDavaSelect={handleDavaSelect}
-          onBasvuruOnayla={handleBasvuruOnayla}
-          onDavaAc={handleDavaAc}
+        <ApplicationList
+          applications={applications}
+          onSelectApplication={handleSelectApplication}
+          onApproveApplication={handleApproveApplication}
+          onOpenCase={handleOpenCase}
         />
 
-        {showDavaEkleForm && selectedBasvuru && (
-          <DavaEkleForm
-            onClose={() => setShowDavaEkleForm(false)}
-            onSubmit={handleDavaCreated}
-            basvuru={selectedBasvuru} // Başvuru bilgilerini forma ilet
+        {showAddCaseForm && selectedApplication && (
+          <AddCaseForm
+            onClose={() => setShowAddCaseForm(false)}
+            onSubmit={handleCaseCreated}
+            application={selectedApplication}
           />
         )}
       </div>
-    </AvukatDashboard>
+    </LawyerDashboard>
   );
 }

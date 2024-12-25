@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import AvukatDashboard from '@/components/pages/lawyer/AvukatDashboard'
+import AvukatDashboard from '@/components/pages/lawyer/LawyerDashboard'
 import { DashboardCard } from '@/components/ui/DashboardCard'
 import { DashboardCharts } from '@/components/shared/DashboardCharts'
 import { FileText, Gavel, Users, AlertTriangle } from 'lucide-react'

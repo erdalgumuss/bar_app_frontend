@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import AvukatDashboard from '@/components/pages/lawyer/AvukatDashboard'
+import AvukatDashboard from '@/components/pages/lawyer/LawyerDashboard'
 import { TakvimGorunumu } from '@/components/pages/lawyer/calender/TakvimGorunumu'
 import { YaklasanDurusmalar } from '@/components/pages/lawyer/calender/YaklasanDurusmalar'
 import { HatirlaticiListesi } from '@/components/pages/lawyer/calender/HatirlaticiListesi'
