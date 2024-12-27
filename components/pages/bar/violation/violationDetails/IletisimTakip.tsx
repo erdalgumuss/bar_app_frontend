@@ -3,18 +3,27 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { IViolation, Message } from '@/types/violation'
 
-export default function IletisimTakip({ hakIhlali, onChange }) {
+interface IletisimTakipProps {
+  hakIhlali: IViolation
+  onChange: (field: keyof IViolation | 'applicant.contact', value: string | IViolation[keyof IViolation]) => void
+}
+
+export default function IletisimTakip({ hakIhlali, onChange }: IletisimTakipProps) {
   const [yeniMesaj, setYeniMesaj] = useState('')
 
   const handleMesajGonder = () => {
     if (yeniMesaj.trim()) {
-      const yeniMesajlar = [...(hakIhlali.mesajlar || []), { 
-        gonderen: 'Baro Yetkilisi', 
-        mesaj: yeniMesaj, 
-        tarih: new Date().toISOString() 
-      }]
-      onChange('mesajlar', yeniMesajlar)
+      const yeniMesajlar: Message[] = [
+        ...(hakIhlali.messages || []),
+        {
+          sender: 'Baro Yetkilisi',
+          message: yeniMesaj,
+          date: new Date(),
+        },
+      ]
+      onChange('messages', yeniMesajlar)
       setYeniMesaj('')
     }
   }
@@ -25,19 +34,22 @@ export default function IletisimTakip({ hakIhlali, onChange }) {
         <Label htmlFor="iletisimBilgisi">İletişim Bilgisi</Label>
         <Input
           id="iletisimBilgisi"
-          value={hakIhlali.iletisimBilgisi}
-          onChange={(e) => onChange('iletisimBilgisi', e.target.value)}
+          value={hakIhlali.applicant.contact}
+          onChange={(e) => onChange('applicant.contact', e.target.value)}
           className="bg-gray-700 text-gray-100"
         />
       </div>
       <div>
         <Label>Mesaj Geçmişi</Label>
-        {hakIhlali.mesajlar && hakIhlali.mesajlar.map((mesaj, index) => (
-          <div key={index} className="bg-gray-700 p-2 rounded mt-2">
-            <p className="text-sm text-gray-300">{mesaj.gonderen} - {new Date(mesaj.tarih).toLocaleString()}</p>
-            <p>{mesaj.mesaj}</p>
-          </div>
-        ))}
+        {hakIhlali.messages &&
+          hakIhlali.messages.map((mesaj, index) => (
+            <div key={index} className="bg-gray-700 p-2 rounded mt-2">
+              <p className="text-sm text-gray-300">
+                {mesaj.sender} - {new Date(mesaj.date).toLocaleString()}
+              </p>
+              <p>{mesaj.message}</p>
+            </div>
+          ))}
       </div>
       <div className="space-y-2">
         <Label htmlFor="yeniMesaj">Yeni Mesaj</Label>
@@ -53,4 +65,3 @@ export default function IletisimTakip({ hakIhlali, onChange }) {
     </div>
   )
 }
-

@@ -8,19 +8,20 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
 import { createApplication } from '@/services/applicationService';
+import { IApplication } from '@/types/application';
 
 export default function CitizenApplicationForm() {
   const [formData, setFormData] = useState({
-    applicantName: '', // Başvuran adı
-    eventTitle: '', // Olay başlığı
-    eventCategory: '', // Kategori
-    description: '', // Açıklama
+    applicantName: '',
+    eventTitle: '',
+    eventCategory: '',
+    description: '',
     contactDetails: {
       email: '',
       phone: '',
       address: '',
-    }, // İletişim bilgileri
-    documents: [] as File[], // Belgeler
+    },
+    documents: [] as File[],
   });
 
   const { toast } = useToast();
@@ -53,10 +54,10 @@ export default function CitizenApplicationForm() {
     e.preventDefault();
 
     // Backend için uygun formatta veri oluşturma
-    const applicationData = {
+    const applicationData: Omit<IApplication, "_id" | "createdAt" | "updatedAt"> = {
       applicantName: formData.applicantName,
       eventTitle: formData.eventTitle,
-      eventCategory: formData.eventCategory,
+      eventCategory: formData.eventCategory as "isHukuku" | "egitimHakki" | "ifadeOzgurlugu" | "kadinaKarsiSiddet" | "cocukHaklari",
       description: formData.description,
       date: new Date().toISOString(),
       documents: formData.documents.map((file) => ({
@@ -65,7 +66,13 @@ export default function CitizenApplicationForm() {
         date: new Date().toISOString(),
       })),
       contactDetails: formData.contactDetails,
+      status: "beklemede", // Varsayılan değer
+      messages: [],
+      history: [],
+      priority: "orta",
+      relatedCases: [],
     };
+    
 
     try {
       await createApplication(applicationData);
@@ -153,29 +160,22 @@ export default function CitizenApplicationForm() {
       <div>
         <Label htmlFor="eventCategory">Başvuru Kategorisi</Label>
         <Select
-  name="eventCategory"
-  onValueChange={(value) =>
-    setFormData((prevState) => ({ ...prevState, eventCategory: value }))
-  }
->
-  <SelectTrigger>
-    <SelectValue placeholder="Kategori seçin" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="isHukuku">İş Hukuku</SelectItem>
-    <SelectItem value="egitimHakki">Eğitim Hakkı</SelectItem>
-    <SelectItem value="ifadeOzgurlugu">İfade Özgürlüğü</SelectItem>
-    <SelectItem value="kadinaKarsiSiddet">Kadına Karşı Şiddet</SelectItem>
-    <SelectItem value="cocukHaklari">Çocuk Hakları</SelectItem>
-    <SelectItem value="tuketiciHaklari">Tüketici Hakları</SelectItem>
-    <SelectItem value="mirasHukuku">Miras Hukuku</SelectItem>
-    <SelectItem value="bosanmaDavasi">Boşanma Davası</SelectItem>
-    <SelectItem value="trafikKazasi">Trafik Kazası</SelectItem>
-    <SelectItem value="sosyalGuvenlik">Sosyal Güvenlik</SelectItem>
-    <SelectItem value="cezaHukuku">Ceza Hukuku</SelectItem>
-    <SelectItem value="insanHaklari">İnsan Hakları</SelectItem>
-  </SelectContent>
-</Select>
+          name="eventCategory"
+          onValueChange={(value) =>
+            setFormData((prevState) => ({ ...prevState, eventCategory: value }))
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Kategori seçin" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="isHukuku">İş Hukuku</SelectItem>
+            <SelectItem value="egitimHakki">Eğitim Hakkı</SelectItem>
+            <SelectItem value="ifadeOzgurlugu">İfade Özgürlüğü</SelectItem>
+            <SelectItem value="kadinaKarsiSiddet">Kadına Karşı Şiddet</SelectItem>
+            <SelectItem value="cocukHaklari">Çocuk Hakları</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <Label htmlFor="description">Açıklama</Label>

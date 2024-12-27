@@ -35,11 +35,11 @@ export default function ApplicationList({
       <TableBody>
         {applications.map((application) => (
           <TableRow
-            key={application.id}
+            key={application._id}
             className="cursor-pointer"
             onClick={() => onSelectApplication(application)} // Modal açma işlevini tetikler
           >
-            <TableCell>{application.id}</TableCell> {/* Backend'den gelen başvuru numarası */}
+            <TableCell>{application._id}</TableCell> {/* Backend'den gelen başvuru numarası */}
             <TableCell>{application.applicantName}</TableCell>
             <TableCell>{application.eventTitle}</TableCell>
             <TableCell>{application.date}</TableCell>
@@ -54,7 +54,7 @@ export default function ApplicationList({
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onApproveApplication(application.id!);
+                      onApproveApplication(application._id!);
                     }}
                   >
                     Onayla
@@ -64,7 +64,7 @@ export default function ApplicationList({
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onOpenCase(application.id!);
+                      onOpenCase(application._id!);
                     }}
                   >
                     Dava Aç

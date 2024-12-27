@@ -17,6 +17,7 @@ interface ApplicationFormProps {
 
 export default function ApplicationForm({ application, onClose, onSubmit }: ApplicationFormProps) {
   const [formData, setFormData] = useState<IApplication>({
+    _id : '',
     applicantName: '',
     contactDetails: {
       email: '',

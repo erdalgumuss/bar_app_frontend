@@ -24,7 +24,7 @@ export interface IHistory {
 }
 
 export interface IApplication {
-  _id: string; // Opsiyonel ID (backend'den dönecek)
+  _id?: string; // Opsiyonel ID (backend'den dönecek)
   applicantName: string;
   contactDetails: IContactDetails;
   eventTitle: string;

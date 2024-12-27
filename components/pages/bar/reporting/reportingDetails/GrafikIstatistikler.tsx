@@ -1,33 +1,26 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-
-const mockData = {
-  davaTurleri: [
-    { name: 'Aile', value: 30 },
-    { name: 'Ticaret', value: 25 },
-    { name: 'Ceza', value: 20 },
-    { name: 'İş', value: 15 },
-    { name: 'İdare', value: 10 },
-  ],
-  davaSonuclari: [
-    { name: 'Kazanılan', value: 60 },
-    { name: 'Kaybedilen', value: 30 },
-    { name: 'İptal Edilen', value: 10 },
-  ],
-}
+import { Rapor } from '@/types/rapor'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
 
-export default function GrafikIstatistikler({  }) {
+interface GrafikIstatistiklerProps {
+  istatistikler: Rapor['istatistikler']
+}
+
+export default function GrafikIstatistikler({ istatistikler }: GrafikIstatistiklerProps) {
+  const { davaTurleri, davaSonuclari } = istatistikler
+
   return (
     <Card className="bg-gray-800 text-gray-100">
       <CardHeader>
         <CardTitle>Grafik ve İstatistikler</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col space-y-6">
+        {/* Bar Chart */}
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={mockData.davaTurleri}>
+            <BarChart data={davaTurleri}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -37,11 +30,13 @@ export default function GrafikIstatistikler({  }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Pie Chart */}
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={mockData.davaSonuclari}
+                data={davaSonuclari}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -50,7 +45,7 @@ export default function GrafikIstatistikler({  }) {
                 dataKey="value"
                 label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               >
-                {mockData.davaSonuclari.map((entry, index) => (
+                {davaSonuclari.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
@@ -63,4 +58,3 @@ export default function GrafikIstatistikler({  }) {
     </Card>
   )
 }
-

@@ -11,13 +11,20 @@ import VakaDurumuTakibi from './violationDetails/VakaDurumuTakibi'
 import BelgelerDosyalar from './violationDetails/BelgelerDosyalar'
 import Istatistikler from './violationDetails/Istatistikler'
 import IletisimTakip from './violationDetails/IletisimTakip'
+import { IViolation } from '@/types/violation'
 
-export default function HakIhlaliDetay({ hakIhlali, onClose, onUpdate }) {
+interface HakIhlaliDetayProps {
+  hakIhlali: IViolation
+  onClose: () => void
+  onUpdate: (updatedHakIhlali: IViolation) => void
+}
+
+export default function HakIhlaliDetay({ hakIhlali, onClose, onUpdate }: HakIhlaliDetayProps) {
   const [activeTab, setActiveTab] = useState('ozet')
-  const [editedHakIhlali, setEditedHakIhlali] = useState(hakIhlali)
+  const [editedHakIhlali, setEditedHakIhlali] = useState<IViolation>(hakIhlali)
 
-  const handleChange = (field, value) => {
-    setEditedHakIhlali(prev => ({ ...prev, [field]: value }))
+  const handleChange = (field: keyof IViolation, value: IViolation[keyof IViolation]) => {
+    setEditedHakIhlali((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = () => {
@@ -57,18 +64,24 @@ export default function HakIhlaliDetay({ hakIhlali, onClose, onUpdate }) {
             <BelgelerDosyalar hakIhlali={editedHakIhlali} onChange={handleChange} />
           </TabsContent>
           <TabsContent value="istatistikler">
-            <Istatistikler hakIhlali={editedHakIhlali} />
+          <Istatistikler
+            data={editedHakIhlali.messages.map((mesaj, index) => ({
+            name: mesaj.sender,
+            vakaSayisi: index + 1, // Örnek olarak her mesajı bir vaka sayısı gibi göstermek
+          }))}
+            />
           </TabsContent>
           <TabsContent value="iletisim">
             <IletisimTakip hakIhlali={editedHakIhlali} onChange={handleChange} />
           </TabsContent>
         </Tabs>
         <div className="flex justify-end space-x-2 mt-4">
-          <Button variant="outline" onClick={onClose}>İptal</Button>
+          <Button variant="outline" onClick={onClose}>
+            İptal
+          </Button>
           <Button onClick={handleSubmit}>Kaydet</Button>
         </div>
       </DialogContent>
     </Dialog>
   )
 }
-

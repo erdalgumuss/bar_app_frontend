@@ -38,7 +38,7 @@ export default function ApplicationManagementPage() {
   };
 
   const handleOpenCase = (applicationId: string) => {
-    const application = applications.find((app) => app.id === applicationId);
+    const application = applications.find((app) => app._id === applicationId);
     if (application) {
       setSelectedApplication(application);
       setShowAddCaseForm(true);
@@ -46,7 +46,7 @@ export default function ApplicationManagementPage() {
   };
 
   const handleSelectApplication = (application: IApplication) => {
-    router.push(`/lawyer/applications/${application.id}`);
+    router.push(`/lawyer/applications/${application._id}`);
   };
 
   const handleCaseCreated = (newCase: Case) => {
@@ -63,7 +63,7 @@ export default function ApplicationManagementPage() {
           },
         ],
       };
-      updateApplication(selectedApplication.id, updatedApplication);
+      updateApplication(selectedApplication._id, updatedApplication);
       setSelectedApplication(null);
       setShowAddCaseForm(false);
       toast({

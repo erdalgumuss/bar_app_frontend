@@ -10,19 +10,23 @@ import DetayliVeriTablosu from '@/components/pages/bar/reporting/reportingDetail
 import OngoreselAnalizTrendler from '@/components/pages/bar/reporting/reportingDetails/OngoreselAnalizTrendler'
 import RaporSonucYorumlar from '@/components/pages/bar/reporting/reportingDetails/RaporSonucYorumlar'
 import { mockRaporlar } from '@/utils/mockData'
+import { Rapor } from '@/types/rapor'
 
 export default function RaporDetayPage() {
   const { id } = useParams()
-  const [rapor, setRapor] = useState(null)
+  const [rapor, setRapor] = useState<Rapor | null>(null)
 
   useEffect(() => {
-    // In a real application, this would be an API call
-    const selectedRapor = mockRaporlar.find(r => r.id.toString() === id)
-    setRapor(selectedRapor)
+    if (typeof id === 'string') {
+      const selectedRapor = mockRaporlar.find((r) => r.id === parseInt(id, 10))
+      setRapor(selectedRapor || null)
+    } else {
+      setRapor(null)
+    }
   }, [id])
 
   if (!rapor) {
-    return <div>Yükleniyor...</div>
+    return <div>Rapor bulunamadı veya yükleniyor...</div>
   }
 
   return (
@@ -30,12 +34,11 @@ export default function RaporDetayPage() {
       <div className="space-y-6 bg-gray-900 text-gray-100 p-6 rounded-lg">
         <RaporBaslikOzet rapor={rapor} />
         <RaporTurKapsam rapor={rapor} />
-        <GrafikIstatistikler rapor={rapor} />
-        <DetayliVeriTablosu rapor={rapor} />
-        <OngoreselAnalizTrendler rapor={rapor} />
-        <RaporSonucYorumlar rapor={rapor} />
+        <GrafikIstatistikler istatistikler={rapor.istatistikler} />
+        <DetayliVeriTablosu detaylar={rapor.detaylar} />
+        <OngoreselAnalizTrendler trendler={rapor.istatistikler.trendler} />
+        <RaporSonucYorumlar yorumlar={rapor.yorumlar} />
       </div>
     </BaroDashboard>
   )
 }
-

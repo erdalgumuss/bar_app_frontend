@@ -26,10 +26,38 @@ export default function LawyerManagement({
 
   // Mock avukat verisi, backend'den çekilmelidir
   const mockLawyers: Lawyer[] = [
-    { id: "1", name: "Av. Mehmet Öz", specialization: "Criminal Law" },
-    { id: "2", name: "Av. Ayşe Yılmaz", specialization: "Family Law" },
-    { id: "3", name: "Av. Ali Kaya", specialization: "Labor Law" },
+    {
+      id: "1",
+      name: "Mehmet",
+      surname: "Öz",
+      specialization: "Criminal Law",
+      activeCases: 5,
+      email: "mehmet.oz@example.com",
+      phone: "123-456-7890",
+      barNumber: "BAR12345",
+    },
+    {
+      id: "2",
+      name: "Ayşe",
+      surname: "Yılmaz",
+      specialization: "Family Law",
+      activeCases: 3,
+      email: "ayse.yilmaz@example.com",
+      phone: "987-654-3210",
+      barNumber: "BAR67890",
+    },
+    {
+      id: "3",
+      name: "Ali",
+      surname: "Kaya",
+      specialization: "Labor Law",
+      activeCases: 7,
+      email: "ali.kaya@example.com",
+      phone: "456-789-0123",
+      barNumber: "BAR11223",
+    },
   ];
+  
 
   // Avukat atama işlemi
   const handleAssignLawyer = () => {

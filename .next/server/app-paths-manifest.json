@@ -1,0 +1,19 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/bar/application/[id]/page": "app/bar/application/[id]/page.js",
+  "/bar/admin/page": "app/bar/admin/page.js",
+  "/bar/application/page": "app/bar/application/page.js",
+  "/bar/avukat-yonetimi/page": "app/bar/avukat-yonetimi/page.js",
+  "/bar/davalar/page": "app/bar/davalar/page.js",
+  "/bar/hak-ihlalleri/page": "app/bar/hak-ihlalleri/page.js",
+  "/bar/page": "app/bar/page.js",
+  "/bar/raporlama/[id]/page": "app/bar/raporlama/[id]/page.js",
+  "/lawyer/basvurular/[id]/page": "app/lawyer/basvurular/[id]/page.js",
+  "/lawyer/davalar/page": "app/lawyer/davalar/page.js",
+  "/bar/raporlama/page": "app/bar/raporlama/page.js",
+  "/lawyer/basvurular/page": "app/lawyer/basvurular/page.js",
+  "/lawyer/page": "app/lawyer/page.js",
+  "/lawyer/performans-istatistikler/page": "app/lawyer/performans-istatistikler/page.js",
+  "/lawyer/takvim/page": "app/lawyer/takvim/page.js"
+}

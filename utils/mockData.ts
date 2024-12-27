@@ -1,3 +1,5 @@
+import { IViolation } from "@/types/violation"
+
 export const specializations = [
   'Ceza Hukuku',
   'Medeni Hukuk',
@@ -13,98 +15,22 @@ export const mockLawyers = [
   { id: 3, name: 'Av. Ali Demir', specialization: 'İş Hukuku', activeCases: 7, email: 'ali@example.com', phone: '05553334444', barNumber: '34567' }
 ]
 
-export const mockHakIhlalleri = [
-  {
-    id: 1,
-    vakaBasligi: "Kadına Yönelik Şiddet Vakası",
-    basvuranKisi: "Ayşe Yılmaz",
-    kategori: "kadinaKarsiSiddet",
-    kaynak: "bireyselBasvuru",
-    durum: "İşlemde",
-    basvuruTarihi: "2023-06-15",
-    detaylar: "Ev içi şiddet vakası, acil koruma talebi mevcut.",
-    olayOzeti: "Başvuran, eşi tarafından fiziksel ve psikolojik şiddete maruz kaldığını bildirmiştir.",
-    basvuranAdi: "Ayşe Yılmaz",
-    basvuranIletisim: "ayse@email.com | 0555-123-4567",
-    basvuruMetni: "Eşim tarafından sürekli olarak şiddete maruz kalıyorum ve can güvenliğim tehlikede.",
-    hukukiTemsilci: "Av. Mehmet Kaya",
-    olayBildirenKurum: "Kadın Dayanışma Vakfı",
-    kaynakDetay: "https://kadindayanismavakfi.org.tr",
-    gelismeler: [
-      { tarih: "2023-06-16", aciklama: "Koruma kararı alındı." },
-      { tarih: "2023-06-20", aciklama: "Psikolojik destek süreci başlatıldı." }
-    ],
-    sonuc: "",
-    dosyalar: [
-      { ad: "Koruma Kararı", tur: "PDF", tarih: "2023-06-16" },
-      { ad: "Sağlık Raporu", tur: "PDF", tarih: "2023-06-17" }
-    ],
-    mesajlar: [
-      { gonderen: "Baro Yetkilisi", mesaj: "Koruma kararı alındı, güvende misiniz?", tarih: "2023-06-16T10:30:00Z" },
-      { gonderen: "Ayşe Yılmaz", mesaj: "Evet, şu an güvendeyim. Teşekkür ederim.", tarih: "2023-06-16T11:15:00Z" }
-    ]
-  },
-  {
-    id: 2,
-    vakaBasligi: "Çocuk İşçiliği İhbarı",
-    basvuranKisi: "Mehmet Öz",
-    kategori: "cocukHaklari",
-    kaynak: "stk",
-    durum: "Tamamlandı",
-    basvuruTarihi: "2023-05-20",
-    detaylar: "Tekstil atölyesinde çocuk işçi çalıştırıldığı ihbarı.",
-    olayOzeti: "Bir tekstil atölyesinde 14 yaşından küçük çocukların çalıştırıldığı ihbar edildi.",
-    basvuranAdi: "Mehmet Öz",
-    basvuranIletisim: "mehmet@email.com | 0555-987-6543",
-    basvuruMetni: "X Tekstil'de çocuk işçi çalıştırıldığını gözlemledim ve bu durumu bildirmek istiyorum.",
-    hukukiTemsilci: "Av. Zeynep Aksoy",
-    olayBildirenKurum: "Çocuk Hakları Derneği",
-    kaynakDetay: "https://cocukhaklaridernegi.org",
-    gelismeler: [
-      { tarih: "2023-05-22", aciklama: "İlgili kurumlara bildirim yapıldı." },
-      { tarih: "2023-06-05", aciklama: "Denetim gerçekleştirildi, işletmeye ceza kesildi." }
-    ],
-    sonuc: "İşletme denetlendi, çocuk işçiler tespit edildi ve gerekli yasal işlemler başlatıldı.",
-    dosyalar: [
-      { ad: "Denetim Raporu", tur: "PDF", tarih: "2023-06-05" },
-      { ad: "Ceza Tutanağı", tur: "PDF", tarih: "2023-06-07" }
-    ],
-    mesajlar: [
-      { gonderen: "Baro Yetkilisi", mesaj: "İhbarınız için teşekkürler, denetim süreci başlatıldı.", tarih: "2023-05-23T09:00:00Z" },
-      { gonderen: "Mehmet Öz", mesaj: "Bilgilendirme için teşekkürler.", tarih: "2023-05-23T10:30:00Z" }
-    ]
-  },
-  {
-    id: 3,
-    vakaBasligi: "İfade Özgürlüğü İhlali",
-    basvuranKisi: "Ali Veli",
-    kategori: "ifadeOzgurlugu",
-    kaynak: "medya",
-    durum: "İşlemde",
-    basvuruTarihi: "2023-06-01",
-    detaylar: "Gazetecinin haber yapma özgürlüğünün engellenmesi.",
-    olayOzeti: "Yerel bir gazeteci, çevre kirliliği hakkında haber yaparken yetkililerce engellendiğini ve tehdit edildiğini bildirdi.",
-    basvuranAdi: "Ali Veli",
-    basvuranIletisim: "ali@email.com | 0555-111-2222",
-    basvuruMetni: "Çevre kirliliği hakkında haber yaparken yetkililer tarafından engellendim ve tehdit edildim.",
-    hukukiTemsilci: "Av. Ayşe Yıldız",
-    olayBildirenKurum: "Gazeteciler Cemiyeti",
-    kaynakDetay: "https://gazetecilercemiyeti.org",
-    gelismeler: [
-      { tarih: "2023-06-03", aciklama: "Savcılığa suç duyurusunda bulunuldu." },
-      { tarih: "2023-06-10", aciklama: "İfade özgürlüğü ihlali raporu hazırlandı." }
-    ],
-    sonuc: "",
-    dosyalar: [
-      { ad: "Suç Duyurusu", tur: "PDF", tarih: "2023-06-03" },
-      { ad: "İhlal Raporu", tur: "PDF", tarih: "2023-06-10" }
-    ],
-    mesajlar: [
-      { gonderen: "Baro Yetkilisi", mesaj: "Başvurunuz alındı, hukuki süreç başlatılıyor.", tarih: "2023-06-02T11:00:00Z" },
-      { gonderen: "Ali Veli", mesaj: "Teşekkür ederim, gelişmeleri bekliyorum.", tarih: "2023-06-02T12:30:00Z" }
-    ]
-  }
-]
+export const mockHakIhlali: IViolation = {
+  _id: '12345',
+  title: 'Kadına Karşı Şiddet',
+  applicant: { name: 'Ayşe Kaya', contact: '555-1234' },
+  category: 'Kadına Karşı Şiddet',
+  source: { type: 'medya', detail: 'Gazete haberi' },
+  status: 'işlemde',
+  applicationDate: new Date(),
+  details: 'Olay detayları burada yer alacak.',
+  messages: [
+    { sender: 'Ayşe Kaya', message: 'Dava süreci hakkında bilgi alabilir miyim?', date: new Date() },
+  ],
+  developments: [],
+  files: [],
+}
+
 
 export const mockDavalar = [
   {
@@ -189,39 +115,41 @@ export const mockRaporlar = [
     tur: "dava",
     zamanAraligi: "Yıllık",
     durum: "Yayımlandı",
-    tarih: "2024-01-15"
+    tarih: "2024-01-15",
+    istatistikler: {
+      davaTurleri: [
+        { name: 'Aile', value: 30 },
+        { name: 'Ticaret', value: 25 },
+        { name: 'Ceza', value: 20 },
+        { name: 'İş', value: 15 },
+        { name: 'İdare', value: 10 },
+      ],
+      davaSonuclari: [
+        { name: 'Kazanılan', value: 60 },
+        { name: 'Kaybedilen', value: 30 },
+        { name: 'İptal Edilen', value: 10 },
+      ],
+      trendler: [
+        { year: '2020', davaSayisi: 100, hakIhlali: 50 },
+        { year: '2021', davaSayisi: 120, hakIhlali: 45 },
+        { year: '2022', davaSayisi: 150, hakIhlali: 60 },
+      ],
+    },
+    detaylar: [
+      { id: 1, davaTuru: 'Aile', basvuran: 'Ahmet Yılmaz', durum: 'Devam Ediyor', tarih: '2024-01-15', avukat: 'Av. Mehmet Öz', sure: '3 ay' },
+      { id: 2, davaTuru: 'Ticaret', basvuran: 'Ayşe Kaya', durum: 'Sonuçlandı', tarih: '2024-02-20', avukat: 'Av. Zeynep Demir', sure: '6 ay' },
+    ],
+    yorumlar: {
+      bulgular: [
+        "2024 yılında aile hukuku davaları %15 arttı.",
+        "Kadına yönelik şiddet vakaları 2023'e göre %10 azaldı.",
+      ],
+      eylemOnerileri: [
+        "Aile hukuku davalarına yönelik uzmanlaşma programı başlatılmalı.",
+        "Kadına karşı şiddet vakalarında önleyici tedbirler güçlendirilmeli.",
+      ],
+    },
   },
-  {
-    id: 2,
-    baslik: "2023 Q4 Hak İhlalleri Özet Raporu",
-    tur: "hakIhlali",
-    zamanAraligi: "Çeyreklik",
-    durum: "İnceleniyor",
-    tarih: "2024-01-10"
-  },
-  {
-    id: 3,
-    baslik: "Aralık 2023 Avukat Performans Raporu",
-    tur: "avukatPerformans",
-    zamanAraligi: "Aylık",
-    durum: "Hazırlanıyor",
-    tarih: "2024-01-05"
-  },
-  {
-    id: 4,
-    baslik: "2023 Yılı Genel Değerlendirme Raporu",
-    tur: "genel",
-    zamanAraligi: "Yıllık",
-    durum: "Yayımlandı",
-    tarih: "2024-01-20"
-  },
-  {
-    id: 5,
-    baslik: "Ocak 2024 Dava Akış Raporu",
-    tur: "dava",
-    zamanAraligi: "Aylık",
-    durum: "Hazırlanıyor",
-    tarih: "2024-02-01"
-  }
-]
+];
+
 
