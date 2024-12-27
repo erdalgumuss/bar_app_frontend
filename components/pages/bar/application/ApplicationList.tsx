@@ -38,12 +38,12 @@ export default function ApplicationList({
         <TableBody>
           {applications.map((application) => (
             <TableRow
-              key={application.id} // ID alanı artık `IApplication` üzerinden geliyor
+              key={application._id} // ID alanı artık `IApplication` üzerinden geliyor
               className="hover:bg-gray-800 border-gray-700 cursor-pointer"
               onClick={() => onDavaSelect(application)}
             >
               <TableCell className="text-gray-100">{application.applicantName || 'N/A'}</TableCell>
-              <TableCell className="text-gray-100">{application.contactDetails.phone || 'N/A'}</TableCell>
+              <TableCell className="text-gray-100">{application.contactDetails?.phone || 'N/A'}</TableCell>
               <TableCell className="text-gray-100">{application.eventTitle || 'N/A'}</TableCell>
               <TableCell className="text-gray-100">
                 <Badge variant="secondary">{application.eventCategory || 'N/A'}</Badge>

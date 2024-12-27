@@ -65,7 +65,7 @@ export default function DashboardLayout({
                     </DropdownMenuItem>
                     { (
                       <DropdownMenuItem asChild>
-                        <Link href="/bar/userm">
+                        <Link href="/bar/admin">
                           <Users className="mr-2 h-4 w-4" />
                           <span>Üye Yönetimi</span>
                         </Link>

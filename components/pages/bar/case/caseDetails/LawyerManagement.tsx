@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Case } from "@/types/case";
-import { Lawyer } from "@/types/lawyer"; // Lawyer tipi, tanımlanmış veri yapısı için
+import { Lawyer } from "@/types/user"; // Lawyer tipi, tanımlanmış veri yapısı için
 
 interface LawyerManagementProps {
   caseData: Case; // Dava bilgisi

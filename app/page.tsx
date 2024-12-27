@@ -13,7 +13,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Hakkımızda</h2>
             <div className="space-y-4 text-gray-600">
               <p>
-                Baro Yönetim Sistemi, Türkiye'deki hukuk sistemini modernize etmek ve vatandaşların adalete erişimini kolaylaştırmak amacıyla geliştirilmiş yenilikçi bir platformdur. Sistemimiz, vatandaşlar, avukatlar ve baro yetkilileri arasında köprü görevi görerek, hukuki süreçleri daha şeffaf, erişilebilir ve verimli hale getirmeyi hedeflemektedir.
+                Baro Yönetim Sistemi, Türkiye&apos;deki hukuk sistemini modernize etmek ve vatandaşların adalete erişimini kolaylaştırmak amacıyla geliştirilmiş yenilikçi bir platformdur. Sistemimiz, vatandaşlar, avukatlar ve baro yetkilileri arasında köprü görevi görerek, hukuki süreçleri daha şeffaf, erişilebilir ve verimli hale getirmeyi hedeflemektedir.
               </p>
               <p>
                 Platformumuz, en son teknolojik gelişmeleri kullanarak, hukuki başvuruların online olarak yapılmasını, davaların takibini ve avukat atama süreçlerinin otomatikleştirilmesini sağlar. Bu sayede, vatandaşlarımız ihtiyaç duydukları hukuki desteğe daha hızlı ve kolay bir şekilde ulaşabilirken, avukatlarımız da iş yüklerini daha etkin bir şekilde yönetebilmektedir.
@@ -22,7 +22,7 @@ export default function Home() {
                 Baro Yönetim Sistemi, aynı zamanda hak ihlalleri konusunda farkındalığı artırmayı ve bu ihlallere karşı hızlı ve etkili bir şekilde harekete geçmeyi amaçlamaktadır. Sistemimiz, özellikle kadın cinayetleri, çocuk istismarı ve aile içi şiddet gibi kritik konularda, mağdurların sesini duyurabilmelerine ve gerekli hukuki desteği alabilmelerine olanak tanır.
               </p>
               <p>
-                Vizyonumuz, Türkiye'de hukukun üstünlüğünü güçlendirmek, adalete erişimi demokratikleştirmek ve toplumun her kesiminin haklarını korumaktır. Baro Yönetim Sistemi olarak, teknolojinin gücünü kullanarak, daha adil ve eşitlikçi bir toplum inşa etme yolunda önemli bir adım attığımıza inanıyoruz.
+                Vizyonumuz, Türkiye&apos;de hukukun üstünlüğünü güçlendirmek, adalete erişimi demokratikleştirmek ve toplumun her kesiminin haklarını korumaktır. Baro Yönetim Sistemi olarak, teknolojinin gücünü kullanarak, daha adil ve eşitlikçi bir toplum inşa etme yolunda önemli bir adım attığımıza inanıyoruz.
               </p>
             </div>
           </section>

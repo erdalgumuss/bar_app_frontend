@@ -1,5 +1,5 @@
 export * from './application';
-export * from './lawyer';
+export * from './user';
 export * from './case';
 export * from './violation';
 

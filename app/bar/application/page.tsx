@@ -57,7 +57,7 @@ export default function ApplicationManagementPage() {
 
   const handleUpdateApplication = async (updatedApplication: IApplication) => {
     try {
-      await updateApplication(updatedApplication.id!, updatedApplication); // ID'nin mevcut olduğunu varsayıyoruz
+      await updateApplication(updatedApplication._id!, updatedApplication); // ID'nin mevcut olduğunu varsayıyoruz
       toast({
         title: 'Başvuru Güncellendi',
         description: 'Başvuru bilgileri başarıyla güncellendi.',
@@ -72,7 +72,7 @@ export default function ApplicationManagementPage() {
   };
 
   const handleDavaSelect = (application: IApplication) => {
-    router.push(`/bar/application/${application.id}`);
+    router.push(`/bar/application/${application._id}`);
   };
 
   return (

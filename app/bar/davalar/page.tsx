@@ -9,6 +9,7 @@ import CaseDetails from '@/components/pages/bar/case/CaseDetails';
 import { Button } from '@/components/ui/button';
 import useCaseStore from '@/stores/useCaseStore'; // Zustand Store kullanımı
 import { Case } from '@/types/case';
+import { toast } from '@/components/ui/use-toast';
 
 export default function CaseManagementPage() {
   const {
@@ -23,13 +24,16 @@ export default function CaseManagementPage() {
   const [showAddCaseForm, setShowAddCaseForm] = useState(false);
 
   useEffect(() => {
-    const loadCases = async () => {
-      await fetchCases(false); // Baro görevlisi davalarını getir
+   fetchCases(false).catch(()=> {
+    toast({  title: 'Hata',
+      description: 'Davalar yüklenirken bir hata oluştu.',
+      variant: 'destructive',
+    });
+  }); 
+    // Baro görevlisi davalarını getir
       setFilteredCases(cases);
-    };
+    },[cases, fetchCases]);
 
-    loadCases();
-  }, [cases, fetchCases]);
 
   const handleFilter = (filtered: Case[]) => {
     setFilteredCases(filtered);

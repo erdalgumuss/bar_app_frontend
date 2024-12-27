@@ -1,23 +1,65 @@
-import apiClient from '@/utils/apiClient'
-import { Member } from '@/stores/useMemberStore'
+import apiClient from '../utils/apiClient';
+import { Lawyer, User } from '../types'; // Tipleri doğru yolu gösterecek şekilde güncelleyin
 
-export const getMembers = async (): Promise<Member[]> => {
-  const response = await apiClient.get('/members')
-  return response.data
-}
+/**
+ * Avukat Tam Kayıt İşlemi
+ */
+export const completeLawyerRegistration = async (lawyerData: {
+  tcNumber: string;
+  email: string;
+  phone: string;
+  specialization: string;
+  barNumber: string;
+}): Promise<void> => {
+  await apiClient.post('/users/lawyers/complete-registration', lawyerData);
+};
 
-export const addMember = async (
-    newMember: Omit<Member, 'id' | 'createdAt' | 'updatedAt'>
-  ): Promise<{ id: number; createdAt: string; updatedAt: string; referenceNumber: string }> => {
-    const response = await apiClient.post('/members', newMember)
-    return response.data
-  }
-  
+/**
+ * Avukat Listesini Getir
+ */
+export const getLawyers = async (): Promise<Lawyer[]> => {
+  const response = await apiClient.get<Lawyer[]>('/users/lawyers');
+  return response.data;
+};
 
-export const updateMemberRole = async (id: number, role: Member['role']): Promise<void> => {
-  await apiClient.patch(`/members/${id}/role`, { role })
-}
+/**
+ * Kullanıcı Rolüne Göre Listeleme
+ */
+export const getUsersByRole = async (role: string): Promise<User[]> => {
+  const response = await apiClient.get<User[]>('/users/', {
+    params: { role },
+  });
+  return response.data;
+};
 
-export const deleteMember = async (id: number): Promise<void> => {
-  await apiClient.delete(`/members/${id}`)
-}
+/**
+ * Admin Görünümünde Kullanıcıları Listele
+ */
+export const getAdminViewUsers = async (): Promise<User[]> => {
+  const response = await apiClient.get<User[]>('/users/admin-view-users');
+  return response.data;
+};
+
+/**
+ * Yeni Kullanıcı Kaydı ve Şifre Oluşturma
+ */
+export const createUserWithPassword = async (userData: {
+  role: string;
+  tcNumber: string;
+}): Promise<{ password: string }> => {
+  const response = await apiClient.post<{ password: string }>('/users', userData);
+  return response.data;
+};
+/**
+ * Kullanıcı Rolünü Güncelle
+ */
+export const updateUserRole = async (userId: string, newRole: string): Promise<void> => {
+  await apiClient.put(`/users/${userId}`, { role: newRole });
+};
+
+/**
+ * Kullanıcı Silme
+ */
+export const deleteUser = async (userId: string): Promise<void> => {
+  await apiClient.delete(`/users/${userId}`);
+};

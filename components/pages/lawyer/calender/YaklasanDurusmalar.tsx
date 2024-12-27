@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 interface YaklasanDurusmalarProps {
-  onSelectDurusma: (durusma: any) => void
+  onSelectDurusma: (durusma: unknown) => void
 }
 
 export function YaklasanDurusmalar({ onSelectDurusma }: YaklasanDurusmalarProps) {

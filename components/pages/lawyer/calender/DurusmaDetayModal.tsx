@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge"
 
 interface DurusmaDetayModalProps {
-  durusma: any
+  durusma: unknown
   onClose: () => void
 }
 

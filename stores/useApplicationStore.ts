@@ -61,7 +61,7 @@ const useApplicationStore = create<ApplicationState>((set) => ({
       const updatedApplication = await updateApplication(id, data);
       set((state) => ({
         applications: state.applications.map((app) =>
-          app.id === id ? updatedApplication : app
+          app._id === id ? updatedApplication : app
         ),
         loading: false,
       }));
@@ -76,7 +76,7 @@ const useApplicationStore = create<ApplicationState>((set) => ({
     try {
       await deleteApplication(id);
       set((state) => ({
-        applications: state.applications.filter((app) => app.id !== id),
+        applications: state.applications.filter((app) => app._id !== id),
         loading: false,
       }));
     } catch (err) {
@@ -102,7 +102,7 @@ const useApplicationStore = create<ApplicationState>((set) => ({
       const updatedApplication = await assignLawyer(id, lawyerId);
       set((state) => ({
         applications: state.applications.map((app) =>
-          app.id === id ? updatedApplication : app
+          app._id === id ? updatedApplication : app
         ),
         loading: false,
       }));

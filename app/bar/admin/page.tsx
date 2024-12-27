@@ -1,91 +1,84 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation' // Yönlendirme için kullanıyoruz
+import { useRouter } from 'next/navigation'
 import BaroDashboard from '@/components/pages/bar/BaroDashboard'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import AddMemberModal from '@/components/pages/bar/admin/AddMemberModal'
 import ChangeMemberRoleModal from '@/components/pages/bar/admin/ChangeMemberRoleModal'
 import DeleteMemberModal from '@/components/pages/bar/admin/DeleteMemberModal'
-import { useAuthStore } from '@/stores/useAuthStore' // Rol kontrolü için useAuthStore kullanıyoruz
-
-interface Member {
-  id: number
-  name: string
-  role: 'lawyer' | 'baro_officer'
-  tcNumber: string
-  referenceNumber?: string
-}
+import { useAuthStore } from '@/stores/useAuthStore'
+import useUserStore from '@/stores/useUserStore'
+import { createUserWithPassword, deleteUser, updateUserRole } from '@/services/userService'
 
 export default function MemberManagementPage() {
-  const [members, setMembers] = useState<Member[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { users, fetchUsers, loading } = useUserStore()
   const [showAddMemberModal, setShowAddMemberModal] = useState(false)
   const [showChangeRoleModal, setShowChangeRoleModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [memberType, setMemberType] = useState<'lawyer' | 'baro_officer' | null>(null)
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null)
-
-  const { role } = useAuthStore((state) => state)  // Rolü store'dan alıyoruz
-  const router = useRouter()  // Yönlendirme için router kullanıyoruz
+  const [selectedMember, setSelectedMember] = useState(null)
+  const { role } = useAuthStore(state => state)
+  const router = useRouter()
 
   // Admin olmayan kullanıcıları erişimden men etme
   useEffect(() => {
     if (role !== 'admin') {
-      // Eğer kullanıcı admin değilse, ana sayfaya yönlendiriyoruz
-      if(role === 'lawyer'){
-      router.replace('/lawyer') 
-      }else if(role === 'baro_officer'){
+      if (role === 'lawyer') {
+        router.replace('/lawyer')
+      } else if (role === 'baro_officer') {
         router.replace('/bar')
-      } // Anasayfaya yönlendir
+      }
     }
   }, [role, router])
 
-  const mockMembers: Member[] = [
-    { id: 1, name: 'Ahmet Yılmaz', role: 'lawyer', tcNumber: '12345678901', referenceNumber: 'REF123' },
-    { id: 2, name: 'Ayşe Kaya', role: 'baro_officer', tcNumber: '23456789012' },
-    { id: 3, name: 'Mehmet Demir', role: 'lawyer', tcNumber: '34567890123', referenceNumber: 'REF456' },
-  ]
-
+  // Üyeleri Backend'den Çekme
   useEffect(() => {
-    // Backend bağlantısı yerine geçici veri kullanıyoruz
-    const fetchMembers = async () => {
-      try {
-        setMembers(mockMembers) // Mock veriyi yükle
-      } catch (error) {
-        console.error('Üye listesi alınırken hata oluştu:', error)
-        alert('Üye listesi yüklenemedi. Lütfen tekrar deneyin.')
-      } finally {
-        setIsLoading(false)
-      }
+    const loadMembers = async () => {
+      await fetchUsers()  // Kullanıcıları çekiyoruz
     }
-    fetchMembers()
-  }, )
+    loadMembers()
+  }, [fetchUsers])
 
-  const onMemberAdded = (newMember: Member) => {
-    setMembers([
-      ...members,
-      { ...newMember, id: Math.floor(Math.random() * 1000) }, // Mock bir id üret
-    ])
-    setShowAddMemberModal(false)
+  // Yeni Üye Ekleme
+  const onMemberAdded = async (newMember) => {
+    try {
+      await createUserWithPassword({ role: newMember.role, tcNumber: newMember.tcNumber })
+      fetchUsers()  // Yeni üyeyi ekledikten sonra üyeleri tekrar çekiyoruz
+      setShowAddMemberModal(false)
+    } catch (error) {
+      console.error('Üye eklerken hata:', error)
+      alert('Üye eklenirken bir hata oluştu.')
+    }
   }
 
-  const onRoleChanged = (memberId: number, newRole: 'lawyer' | 'baro_officer') => {
-    setMembers(members.map(member =>
-      member.id === memberId ? { ...member, role: newRole } : member
-    ))
-    setShowChangeRoleModal(false)
+  // Yetki Değiştirme
+  const onRoleChanged = async (memberId, newRole) => {
+    try {
+      await updateUserRole(memberId, newRole)
+      fetchUsers()  // Yetki değişiminden sonra üyeleri tekrar çekiyoruz
+      setShowChangeRoleModal(false)
+    } catch (error) {
+      console.error('Yetki değiştirirken hata:', error)
+      alert('Yetki değiştirilirken bir hata oluştu.')
+    }
   }
 
-  const onMemberDeleted = (memberId: number) => {
-    setMembers(members.filter(member => member.id !== memberId))
-    setShowDeleteModal(false)
+  // Üye Silme
+  const onMemberDeleted = async (memberId) => {
+    try {
+      await deleteUser(memberId)
+      fetchUsers()  // Üye silindikten sonra üyeleri tekrar çekiyoruz
+      setShowDeleteModal(false)
+    } catch (error) {
+      console.error('Üye silinirken hata:', error)
+      alert('Üye silinirken bir hata oluştu.')
+    }
   }
 
-  const openModal = (type: 'add' | 'changeRole' | 'delete', member?: Member) => {
+  // Modal Açma
+  const openModal = (type, member = null) => {
     if (type === 'add') {
-      setMemberType('lawyer') // veya 'baro_officer'
       setShowAddMemberModal(true)
     } else if (type === 'changeRole' && member) {
       setSelectedMember(member)
@@ -101,10 +94,10 @@ export default function MemberManagementPage() {
       <div className="space-y-6">
         <h1 className="text-3xl font-bold">Üye Yönetimi</h1>
         <div className="flex space-x-4">
-          <Button onClick={() => openModal('add', null)}>Avukat Ekle</Button>
-          <Button onClick={() => openModal('add', null)}>Baro Üyesi Ekle</Button>
+          <Button onClick={() => openModal('add')}>Avukat Ekle</Button>
+          <Button onClick={() => openModal('add')}>Baro Üyesi Ekle</Button>
         </div>
-        {isLoading ? (
+        {loading ? (
           <p>Yükleniyor...</p>
         ) : (
           <Table>
@@ -118,12 +111,12 @@ export default function MemberManagementPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {members.map((member) => (
+              {users.map((member) => (
                 <TableRow key={member.id}>
                   <TableCell>{member.name}</TableCell>
                   <TableCell>{member.role === 'lawyer' ? 'Avukat' : 'Baro Üyesi'}</TableCell>
                   <TableCell>{member.tcNumber}</TableCell>
-                  <TableCell>{member.referenceNumber || 'Yok'}</TableCell>
+                  <TableCell>{member.password || 'Yok'}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
                       <Button variant="outline" size="sm" onClick={() => openModal('changeRole', member)}>
@@ -145,6 +138,7 @@ export default function MemberManagementPage() {
           isOpen={showAddMemberModal}
           onClose={() => setShowAddMemberModal(false)}
           memberType={memberType}
+
           onMemberAdded={onMemberAdded}
         />
       )}

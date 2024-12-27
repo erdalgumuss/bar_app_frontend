@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent,  CardHeader, CardTitle } from '@/components/ui/card'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 const cardVariants = cva(
