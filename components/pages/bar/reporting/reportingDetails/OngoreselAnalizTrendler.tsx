@@ -10,7 +10,7 @@ const mockTrendData = [
   { year: '2025', davaSayisi: 220, hakIhlali: 35 },
 ]
 
-export default function OngoreselAnalizTrendler({ rapor }) {
+export default function OngoreselAnalizTrendler({  }) {
   return (
     <Card className="bg-gray-800 text-gray-100">
       <CardHeader>
@@ -35,7 +35,7 @@ export default function OngoreselAnalizTrendler({ rapor }) {
           <ul className="list-disc list-inside space-y-2">
             <li>Dava sayılarında yıllık ortalama %10 artış beklenmektedir.</li>
             <li>Hak ihlali vakalarında son yıllarda azalma trendi gözlemlenmektedir.</li>
-            <li>Önümüzdeki 5 yıl içinde aile hukuku davalarında %15'lik bir artış öngörülmektedir.</li>
+            <li>Önümüzdeki 5 yıl içinde aile hukuku davalarında %15&apos;lik bir artış öngörülmektedir.</li>
           </ul>
         </div>
       </CardContent>

@@ -10,17 +10,17 @@ import {
   DialogTitle,
   DialogHeader,
 } from '@/components/ui/dialog'
-import { updateMemberRole } from '@/services/userService'
+import { updateUserRole } from '@/services/userService'
 
 interface ChangeMemberRoleModalProps {
   isOpen: boolean
   onClose: () => void
   member: {
-    id: number
+    id: string // member.id artık string olmalı (backend'deki ObjectId uyumu için)
     name: string
     role: 'lawyer' | 'baro_officer'
   }
-  onRoleChanged: (memberId: number, newRole: 'lawyer' | 'baro_officer') => void
+  onRoleChanged: (memberId: string, newRole: 'lawyer' | 'baro_officer') => void
 }
 
 export default function ChangeMemberRoleModal({ isOpen, onClose, member, onRoleChanged }: ChangeMemberRoleModalProps) {
@@ -37,7 +37,8 @@ export default function ChangeMemberRoleModal({ isOpen, onClose, member, onRoleC
 
     setIsLoading(true)
     try {
-      await updateMemberRole(member.id, newRole)
+      // `updateUserRole` fonksiyonunda id'nin string olarak geçmesi gerektiğini unutma
+      await updateUserRole(member.id, newRole)
       onRoleChanged(member.id, newRole)
       onClose()
     } catch (error) {

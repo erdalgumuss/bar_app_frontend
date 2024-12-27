@@ -5,8 +5,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { specializations } from '@/utils/mockData'
+import { Lawyer } from '@/types'
 
-export default function AvukatList({ lawyers, onViewDetails }) {
+interface AvukatListProps {
+  lawyers: Lawyer[]; // Avukat listesi
+  onSelectLawyer: (lawyer: Lawyer) => void; // Avukatı seçme işlevi
+  onViewDetails: (lawyer: Lawyer) => void; // Avukatın detaylarını görüntüleme işlevi
+}
+
+export default function AvukatList({ lawyers,  onViewDetails }: AvukatListProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [specializationFilter, setSpecializationFilter] = useState('all')
   const [sortBy, setSortBy] = useState('name')
@@ -82,6 +89,7 @@ export default function AvukatList({ lawyers, onViewDetails }) {
               <TableCell className="text-gray-100">{lawyer.activeCases}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
+                  {/* İşlemler için düğmeler buraya eklenebilir */}
                 </div>
               </TableCell>
             </TableRow>
@@ -91,4 +99,3 @@ export default function AvukatList({ lawyers, onViewDetails }) {
     </div>
   )
 }
-

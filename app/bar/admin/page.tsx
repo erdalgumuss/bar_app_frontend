@@ -41,9 +41,16 @@ export default function MemberManagementPage() {
   }, [fetchUsers])
 
   // Yeni Üye Ekleme
-  const onMemberAdded = async (newMember) => {
+  const onMemberAdded = async (NewUser) => {
     try {
-      await createUserWithPassword({ role: newMember.role, tcNumber: newMember.tcNumber })
+      // Yeni üyeyi backend'e kaydediyoruz
+      if (!NewUser.role) {
+        alert('Lütfen bir rol seçin.')
+        return
+      }
+  
+      await createUserWithPassword({ role: NewUser.role, tcNumber: NewUser.tcNumber })
+      console.log("rolu yazdır", NewUser.role)
       fetchUsers()  // Yeni üyeyi ekledikten sonra üyeleri tekrar çekiyoruz
       setShowAddMemberModal(false)
     } catch (error) {
@@ -51,7 +58,6 @@ export default function MemberManagementPage() {
       alert('Üye eklenirken bir hata oluştu.')
     }
   }
-
   // Yetki Değiştirme
   const onRoleChanged = async (memberId, newRole) => {
     try {
@@ -137,8 +143,7 @@ export default function MemberManagementPage() {
         <AddMemberModal
           isOpen={showAddMemberModal}
           onClose={() => setShowAddMemberModal(false)}
-          memberType={memberType}
-
+          memberType={selectedMember?.role || 'lawyer' }
           onMemberAdded={onMemberAdded}
         />
       )}

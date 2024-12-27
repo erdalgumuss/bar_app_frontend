@@ -18,7 +18,7 @@ const mockData = {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
 
-export default function GrafikIstatistikler({ rapor }) {
+export default function GrafikIstatistikler({  }) {
   return (
     <Card className="bg-gray-800 text-gray-100">
       <CardHeader>

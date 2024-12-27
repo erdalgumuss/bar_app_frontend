@@ -6,21 +6,22 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogHeader } from '@/components/ui/dialog'
 import { createUserWithPassword } from '@/services/userService'
-import {  } from '@/stores/useUserStore'
-import { NewUser, User } from '@/types'
+import { NewUser } from '@/types'
 
 interface AddMemberModalProps {
   isOpen: boolean
   onClose: () => void
-  memberType: 'lawyer' | 'baro_officer' | null
-  onMemberAdded: (newMember: User) => void
+  memberType: 'lawyer' | 'baro_officer' // Prop olarak gönderilen role
+  onMemberAdded: (newMember: NewUser) => void
 }
 
 export default function AddMemberModal({ isOpen, onClose, memberType, onMemberAdded }: AddMemberModalProps) {
   const [formData, setFormData] = useState({
     tcNumber: '',
+    role: memberType, // 'role' burada otomatik olarak memberType'dan alınıyor
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [temporaryPassword, setTemporaryPassword] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,25 +32,24 @@ export default function AddMemberModal({ isOpen, onClose, memberType, onMemberAd
       return
     }
 
-  
-
     setIsLoading(true)
+    setTemporaryPassword(null) // Geçici şifreyi sıfırla
 
     try {
       // Backend'e gönderilecek veri
-      const password = await createUserWithPassword({
-        role: memberType!,
+      const { password } = await createUserWithPassword({
+        role: formData.role, // 'role' burada gönderiliyor
         tcNumber: formData.tcNumber,
       })
-    
 
       const newUser: NewUser = {
         tcNumber: formData.tcNumber,
-        role: memberType!,
+        role: formData.role, // 'role' burada backend'e gönderiliyor
       }
 
       onMemberAdded(newUser)
-      setFormData({ tcNumber: '', })
+      setTemporaryPassword(password)  // Geçici şifreyi sakla
+      setFormData({ tcNumber: '', role: memberType }) // 'role' tekrar ayarlanıyor
     } catch (error: unknown) {
       console.error('Üye ekleme hatası:', error)
       if (error instanceof Error) {

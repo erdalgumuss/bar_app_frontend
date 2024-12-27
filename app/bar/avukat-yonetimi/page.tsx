@@ -1,29 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import BaroDashboard from '@/components/pages/bar/BaroDashboard'
 import AvukatList from '@/components/pages/bar/lawyerManagement/AvukatList'
-import AvukatForm from '@/components/pages/bar/lawyerManagement/AvukatForm'
 import AvukatDetay from '@/components/pages/bar/lawyerManagement/AvukatDetay'
 import AvukatPerformans from '@/components/pages/bar/lawyerManagement/AvukatPerformans'
 import AvukatAramaFiltre from '@/components/pages/bar/lawyerManagement/AvukatAramaFiltre'
 import AvukatTakvim from '@/components/pages/bar/lawyerManagement/AvukatTakvim'
 import AvukatKategorileri from '@/components/pages/bar/lawyerManagement/AvukatKategorileri'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { mockLawyers } from '@/utils/mockData'
+import useUserStore from '@/stores/useUserStore'
+import { Lawyer } from '@/types'
 
 export default function AvukatYonetimiPage() {
-  const [lawyers] = useState(mockLawyers)
-  const [filteredLawyers, setFilteredLawyers] = useState(mockLawyers)
-  const [selectedLawyer, setSelectedLawyer] = useState(null)
-  const [showNewLawyerForm, setShowNewLawyerForm] = useState(false)
-  const [viewingLawyer, setViewingLawyer] = useState(null)
+  const { lawyers, fetchLawyers,  } = useUserStore()  // Kullanıcı store'dan avukat verilerini çekiyoruz
+  const [filteredLawyers, setFilteredLawyers] = useState<Lawyer[]>(lawyers)  // Avukatları filtreliyoruz
+  const [, setSelectedLawyer] = useState<Lawyer | null>(null)
+  const [viewingLawyer, setViewingLawyer] = useState<Lawyer | null>(null)
 
-  const handleViewDetails = (lawyer) => {
+  useEffect(() => {
+    const loadLawyers = async () => {
+      await fetchLawyers()  // Gerçek avukat verilerini çekiyoruz
+    }
+    loadLawyers()
+  }, [fetchLawyers])
+
+  const handleViewDetails = (lawyer: Lawyer) => {
     setViewingLawyer(lawyer)
   }
 
-  const handleFilter = (filteredData) => {
+  const handleFilter = (filteredData: Lawyer[]) => {
     setFilteredLawyers(filteredData)
   }
 
@@ -32,7 +38,6 @@ export default function AvukatYonetimiPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-100">Avukat Yönetimi</h1>
-          
         </div>
 
         <AvukatAramaFiltre lawyers={lawyers} onFilter={handleFilter} />
@@ -58,24 +63,13 @@ export default function AvukatYonetimiPage() {
             <AvukatTakvim lawyers={filteredLawyers} />
           </TabsContent>
           <TabsContent value="categories">
-            <AvukatKategorileri lawyers={filteredLawyers} />
+            <AvukatKategorileri lawyers={filteredLawyers} onUpdateLawyer={undefined} />
           </TabsContent>
         </Tabs>
 
-        {showNewLawyerForm && (
-          <AvukatForm
-            onClose={() => setShowNewLawyerForm(false)}
-            onSubmit={handleNewLawyer}
-          />
-        )}
+        
 
-        {selectedLawyer && (
-          <AvukatForm
-            lawyer={selectedLawyer}
-            onClose={() => setSelectedLawyer(null)}
-            onSubmit={handleUpdateLawyer}
-          />
-        )}
+   
 
         {viewingLawyer && (
           <AvukatDetay

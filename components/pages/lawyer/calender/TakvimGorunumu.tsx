@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 interface TakvimGorunumuProps {
   selectedDate: Date | null
   onSelectDate: (date: Date | null) => void
-  onSelectDurusma: (durusma: any) => void
+  onSelectDurusma: (durusma: unknown) => void
 }
 
 export function TakvimGorunumu({ selectedDate, onSelectDate, onSelectDurusma }: TakvimGorunumuProps) {

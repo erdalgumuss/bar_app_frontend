@@ -9,16 +9,16 @@ import {
   DialogTitle,
   DialogHeader,
 } from '@/components/ui/dialog'
-import { deleteMember } from '@/services/userService'
+import { deleteUser } from '@/services/userService'
 
 interface DeleteMemberModalProps {
   isOpen: boolean
   onClose: () => void
   member: {
-    id: number
+    id: string // `id`'yi string olarak değiştirdik (backend'deki ObjectId ile uyumlu olması için)
     name: string
   }
-  onMemberDeleted: (memberId: number) => void
+  onMemberDeleted: (memberId: string) => void // `onMemberDeleted` fonksiyonunu da string id ile güncelliyoruz
 }
 
 export default function DeleteMemberModal({ isOpen, onClose, member, onMemberDeleted }: DeleteMemberModalProps) {
@@ -27,7 +27,7 @@ export default function DeleteMemberModal({ isOpen, onClose, member, onMemberDel
   const handleDelete = async () => {
     setIsLoading(true)
     try {
-      await deleteMember(member.id) // Backend çağrısı
+      await deleteUser(member.id) // Backend çağrısı
       onMemberDeleted(member.id) // Parent bileşeni bilgilendir
       onClose() // Modal'ı kapat
     } catch (error) {

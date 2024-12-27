@@ -8,7 +8,7 @@ const mockTableData = [
   { id: 3, davaTuru: 'Ceza', basvuran: 'Ali Veli', durum: 'Devam Ediyor', tarih: '2024-03-10', avukat: 'Av. Hasan Yılmaz', sure: '2 ay' },
 ]
 
-export default function DetayliVeriTablosu({ rapor }) {
+export default function DetayliVeriTablosu({ }) {
   return (
     <Card className="bg-gray-800 text-gray-100">
       <CardHeader>

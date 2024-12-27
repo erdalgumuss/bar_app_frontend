@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export default function RaporSonucYorumlar({ rapor }) {
+export default function RaporSonucYorumlar({  }) {
   return (
     <Card className="bg-gray-800 text-gray-100">
       <CardHeader>
@@ -12,7 +12,7 @@ export default function RaporSonucYorumlar({ rapor }) {
             <h4 className="text-lg font-semibold mb-2">Bulgular</h4>
             <ul className="list-disc list-inside space-y-2">
               <li>2024 yılında aile hukuku davaları %15 arttı.</li>
-              <li>Kadına yönelik şiddet vakaları 2023'e göre %10 azaldı.</li>
+              <li>Kadına yönelik şiddet vakaları 2023&apos;e göre %10 azaldı.</li>
               <li>Ticari davaların ortalama çözüm süresi 2 ay kısaldı.</li>
             </ul>
           </div>
